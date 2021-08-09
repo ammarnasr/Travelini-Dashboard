@@ -1,0 +1,7 @@
+.Admin-content {
+  margin: 32px 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

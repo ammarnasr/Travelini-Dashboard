@@ -1,0 +1,50 @@
+.Offers-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Offers-delete {
+  color: #e53935;
+  background-color: #fff;
+  border: 2px solid #e53935;
+}
+.Offers-delete:hover {
+  color: #ef5350;
+  background-color: #fafafa;
+}
+
+.Offers-delete:active {
+  background-color: #f5f5f5;
+}
+
+.Offers-edit {
+  margin-right: 8px;
+  background-color: #fff;
+  border: 2px solid #ff9100;
+  color: #ff9100;
+}
+
+.Offers-edit:hover {
+  color: #ff9100;
+  background-color: #fafafa;
+}
+
+.Offers-edit:active {
+  background-color: #f5f5f5;
+}
+
+.Offers-availability {
+  margin-right: 8px;
+  background-color: #fff;
+  border: 2px solid #559155;
+  color: #559155;
+}
+
+.Offers-availability:hover {
+  color: #559155;
+  background-color: #fafafa;
+}
+
+.Offers-availability:active {
+  background-color: #f5f5f5;
+}
