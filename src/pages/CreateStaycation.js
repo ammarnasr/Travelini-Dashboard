@@ -12,6 +12,8 @@ import PropTypes from "prop-types";
 
 const MAX_IMAGE_COUNT = 12;
 
+const Currency_List = ["AED", "USD", "EUR", "GBP", "SAR"]
+
 export function CreateStaycation({ edit }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,9 +34,18 @@ export function CreateStaycation({ edit }) {
       addons: "",
       terms: "",
     });
-  const [category, setCategory] = useState(edit
-    ? location.state.category
-    : "Ras Al Khaimah");
+      const [currency, setCurrency] = useState(edit
+          ? location.state.currency
+          : "AED");
+
+      const [category, setCategory] = useState(edit
+        ? location.state.category
+        : "Ras Al Khaimah");
+  
+        const [category2, setCategory2] = useState(edit
+          ? staycation.category
+          : "Ras Al Khaimah");
+            
   const [images, setImages] = useState(edit
     ? location.state.image_urls
     : []);
@@ -63,6 +74,7 @@ export function CreateStaycation({ edit }) {
   };
 
   const handleSubmit = async e => {
+    console.log("Pressed Submit")
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -105,6 +117,8 @@ export function CreateStaycation({ edit }) {
       setLoading(false);
       return;
     }
+
+    console.log("Upload Done")
   }
   const finishUpload = async imageUrls => {
     const data = {
@@ -147,7 +161,7 @@ export function CreateStaycation({ edit }) {
   return (
     <div className="d-flex justify-content-center align-items-center">
       <div className="create-inner">
-        <h2 className="text-center mb-4">Create Staycation</h2>
+        <h2 className="text-center mb-4">{category == "Tickets" ? 'Buy Tickets' : 'Create Staycation'}</h2>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Form.Group id="images">
@@ -175,6 +189,8 @@ export function CreateStaycation({ edit }) {
               required
             />
           </Form.Group>
+          
+          
           <Form.Group id="category">
             <Form.Label>Category</Form.Label>
             <DropdownButton
@@ -182,6 +198,7 @@ export function CreateStaycation({ edit }) {
               title={category}
               variant="dark"
               onSelect={(e) => setCategory(e)}
+              value={staycation.category}
             >
               {
                 allCategories.map((category) =>
@@ -190,6 +207,10 @@ export function CreateStaycation({ edit }) {
               }
             </DropdownButton>
           </Form.Group>
+
+          
+        
+
           <Form.Group id="location">
             <Form.Label>Location</Form.Label>
             <Form.Control
@@ -200,17 +221,23 @@ export function CreateStaycation({ edit }) {
               required
             />
           </Form.Group>
+
+
           <Form.Group id="roomType">
-            <Form.Label>Room Type</Form.Label>
+            <Form.Label>{category == "Tickets" ? 'Tickets' : 'Room Type'}</Form.Label>
+            {/* <Form.Label>{category}</Form.Label> */}
             <Form.Control
               name="roomType"
               onChange={handleFieldChange}
               value={staycation.roomType ?? ""}
-              placeholder="Enter the room type"
+              placeholder={category == "Tickets" ? 'Enter The Ticket Type' : 'Enter the room type'}
               required
             />
           </Form.Group>
-          <Form.Group id="currency">
+
+
+
+          {/* <Form.Group id="currency">
             <Form.Label>Currency</Form.Label>
             <Form.Control
               name="currency"
@@ -219,7 +246,27 @@ export function CreateStaycation({ edit }) {
               placeholder="Enter the currency code (e.g. USD, AED, etc.)"
               required
             />
+          </Form.Group> */}
+
+          <Form.Group id="currency">
+            <Form.Label>Currency</Form.Label>
+            <DropdownButton
+              id="dropdown-currency"
+              title={currency}
+              variant="dark"
+              onSelect={(e) => setCurrency(e)}
+              value={staycation.currency}
+            >
+              {
+                Currency_List.map((currency) =>
+                  <Dropdown.Item key={currency} eventKey={currency}>{currency}</Dropdown.Item>
+                )
+              }
+            </DropdownButton>
           </Form.Group>
+
+
+
           <Form.Group id="price">
             <Form.Label>Price</Form.Label>
             <Form.Control
