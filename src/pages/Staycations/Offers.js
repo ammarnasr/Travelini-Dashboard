@@ -29,12 +29,12 @@ function Offers() {
     togglePublishedFromPG(doc.id);
   };
 
+
   const getOffers = () => {
     axios
       .get("https://www.travelini.link/staycations/0/getOffers")
       .then((data) => {
         setStaycations2(data.data);
-        console.log(data.data);
         setUpdating2(false);
         setLoading(false);
       })
@@ -53,6 +53,7 @@ function Offers() {
       })
       .catch((error) => console.log(error));
   };
+  
 
   const deleteOfferFromPG = (id) => {
     console.log("Deleting Data");
