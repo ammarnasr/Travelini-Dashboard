@@ -19,12 +19,13 @@ function Bookings() {
     const { privileges } = useAuth();
     const [updating, setUpdating] = useState({});
     const [updating2, setUpdating2] = useState(false);
-
+    
     
   const getBookings = () => {
     console.log("Getting bookings...")
     axios
-      .get("http://localhost:80/staycations/getAllStaycationBooking")
+    //   .get("http://localhost:80/staycations/getAllStaycationBooking")
+      .get("https://www.travelini.link/staycations/getAllStaycationBooking")
       .then((data) => {
         setBookings2(data.data);
         setUpdating2(false);
@@ -43,7 +44,9 @@ function Bookings() {
   const toggleConfirmedFromPG = (id) => {
     setUpdating2(true);
 
-    let urlToggle = "http://localhost:80/staycations/toggleConfirmed/" + id;
+    
+    // let urlToggle = "http://localhost:80/staycations/toggleConfirmed/" + id;
+    let urlToggle = "https://www.travelini.link/staycations/toggleConfirmed/" + id;
     console.log("URL to toggle Confirmed: ", urlToggle);
     axios
       .get(urlToggle)
