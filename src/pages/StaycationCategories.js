@@ -11,8 +11,10 @@ import axios from "axios";
 
 
 
+
 function Category({ doc, onDelete }) {
     const { cover_image_url, name } = doc;
+
     const [deleteShown, setDeleteShown] = useState(false);
     const showDelete = () => setDeleteShown(true);
     const hideDelete = () => setDeleteShown(false);
@@ -21,8 +23,8 @@ function Category({ doc, onDelete }) {
         <div className="Category"
             onMouseEnter={showDelete}
             onMouseLeave={hideDelete}>
-            <img src={cover_image_url} alt={`${name}'s cover`} />
-            <span className="Category-title">{name}</span>
+            <img src={doc.cover_image_url} alt={`${doc.name}'s cover`} />
+            <span className="Category-title">{doc.name}</span>
             <button className="Category-delete" onClick={onDelete} style={{
                 visibility: deleteShown ? 'visible' : 'hidden'
             }}><FaTrash /></button>
@@ -117,7 +119,7 @@ function StaycationCategories() {
     const { privileges } = useAuth()
 
     const [loading, setLoading] = useState(true);
-    const [categories, setCategories] = useState();
+    const [categories, setCategories] = useState({ data: [] });
     const [show, setShow] = useState(false);
     const showModal = () => setShow(true);
     const closeModal = () => setShow(false);
@@ -130,6 +132,7 @@ function StaycationCategories() {
             setLoading(false);
         }
     };
+
     const createCategory = async ({ name, image }) => {
         const { ref } = await storage
             .ref(`/StaycationCategories/${name}`)
@@ -140,10 +143,84 @@ function StaycationCategories() {
             name,
             cover_image_url
         });
+
+
+        setLoading(true);
+        console.log("Name & URL", name, cover_image_url);
+        const newCat = {
+            cover_image_url: cover_image_url,
+            name: name,
+        };
+        let addURL = "https://www.travelini.link/staycations/addCategory"
+        axios
+          .post(addURL, newCat)
+          .then((data) => {
+            console.log(data.data);
+            getCategories();
+
+          })
+          .catch((error) => console.log(error));
+          setLoading(false)
         closeModal();
     };
+
+    
+    const getCategories = () => {
+        console.log("Getting Categories...")
+        axios
+          .get("https://www.travelini.link/staycations/getCategory")
+          .then((data) => {
+            console.log(data.data);
+            setCategories(data.data);
+            setLoading(false);
+            console.log("The Cats: ", categories)  
+    
+          })
+          .catch((error) => console.log(error));
+      };
+
+    const deleteCategory2 = doc => async () => {
+        setLoading(true);
+        console.log("Getting Categories...")
+        let deleteURL = "https://www.travelini.link/staycations/deleteCategory/" + doc.id
+        // let deleteURL = "http://localhost:80/staycations/deleteCategory/" + doc.id
+        axios
+          .get(deleteURL)
+          .then((data) => {
+            console.log(data.data);
+            getCategories(); 
+    
+          })
+          .catch((error) => console.log(error));
+          setLoading(false)
+      };
+      
+    const createCategory2 = async ({ name, imageUrl }) => {
+        
+        const newCat = {
+            cover_image_url: imageUrl,
+            name: name,
+        };
+
+        console.log("Adding Categories...")
+        console.log("Name & URL", name, imageUrl);
+
+        let addURL = "https://www.travelini.link/staycations/addCategory"
+        
+        axios
+          .post(addURL, newCat)
+          .then((data) => {
+            console.log(data.data);
+          })
+          .catch((error) => console.log(error));
+          setLoading(false)
+      };
+      
+        
+    
     useEffect(() => {
         setLoading(true);
+        getCategories()
         if (privileges === "Editor" || privileges === "None") {
             setCategories([]);
             setLoading(false);
@@ -177,10 +254,10 @@ function StaycationCategories() {
                 <div className="CardContainer-body">
                     {loading
                         ? "Loading"
-                        : !categories?.length || privileges === "None" || privileges === "Editor"
+                        : !categories.data?.length || privileges === "None" || privileges === "Editor"
                             ? (privileges === "None" || privileges === "Editor" ? "You don't have sufficient privileges to view this page" : "There are no categories here.")
                             : <div className="CategoryList">
-                                {categories.map(doc => <Category key={doc.id} doc={doc} onDelete={deleteCategory(doc)} />)}
+                                {categories.data.map(doc => <Category key={doc.id} doc={doc} onDelete={deleteCategory2(doc)} />)}
                             </div>
                     }
                 </div>
