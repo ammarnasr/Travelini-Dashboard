@@ -7,11 +7,12 @@ import "../assets/css/StaycationCategories.css";
 import imageIcon from "../assets/images/image-icon.svg";
 import { firestore, storage } from "../firebase.js";
 import { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
 
 
 
 function Category({ doc, onDelete }) {
-    const { cover_image_url, name } = doc.data();
+    const { cover_image_url, name } = doc;
     const [deleteShown, setDeleteShown] = useState(false);
     const showDelete = () => setDeleteShown(true);
     const hideDelete = () => setDeleteShown(false);
@@ -148,7 +149,14 @@ function StaycationCategories() {
             setLoading(false);
             return;
         }
-        const cancelSub = firestore
+        
+        axios.get(`https://www.travelini.link/staycations/getCategory`)
+        .then(({data})=>{
+            console.log("res is", data)
+            setCategories(data.data);
+            setLoading(false);
+        })
+        /*const cancelSub = firestore
             .collection('StaycationCategories')
             .onSnapshot({
                 next(snapshot) {
@@ -156,7 +164,7 @@ function StaycationCategories() {
                     setLoading(false);
                 }
             });
-        return cancelSub;
+        return cancelSub;*/
     }, [privileges]);
     return (
         <>
